@@ -9,7 +9,7 @@ public class PlayerShip : MonoBehaviour
 
     //Rigidbody of the ship.
     [SerializeField]
-    private Rigidbody shipRB;
+    private Rigidbody2D shipRB;
     
     //Represents the weapon, and where the weapon should be shot from on the ship.
     public Transform shotSpawn;
@@ -42,16 +42,15 @@ public class PlayerShip : MonoBehaviour
         float verticalMove = Input.GetAxisRaw("Vertical");
 
         //Sets the movement depending on the control direction. Have the player move with the field plus the direction.
-        Vector3 movement = new Vector3(horizontalMove,verticalMove,0);
-        shipRB.velocity = playingField.GetComponent<Rigidbody>().velocity + (movement * speed);
+        Vector2 movement = new Vector2(horizontalMove,verticalMove);
+        shipRB.velocity = playingField.GetComponent<Rigidbody2D>().velocity + (movement * speed);
 
         //Sets the boundaries of the field.
         Transform fieldLoc = playingField.GetComponent<Transform>();
-        shipRB.position = new Vector3
+        shipRB.position = new Vector2
         (
             Mathf.Clamp(shipRB.position.x,fieldLoc.position.x - 8.6f,fieldLoc.position.x + 8.6f),
-            Mathf.Clamp(shipRB.position.y,-4.9f,4.9f),
-            0
+            Mathf.Clamp(shipRB.position.y,-4.9f,4.9f)
         );
     }
 
@@ -64,11 +63,11 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.tag == "Enemy" || other.tag == "EnemyWeapon")
+        if (collision.CompareTag("Enemy") || collision.CompareTag("EnemyWeapon"))
         {
-            Destroy(other.gameObject);
+            Destroy(collision.gameObject);
             Debug.Log("Ouch!");
         }
     }
