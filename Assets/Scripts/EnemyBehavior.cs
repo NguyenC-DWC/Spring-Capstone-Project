@@ -9,7 +9,7 @@ public class EnemyBehavior : MonoBehaviour
 
     //Rigidbody of the object.
     [SerializeField]
-    private Rigidbody enemyRigid;
+    private Rigidbody2D enemyRigid;
 
     //Represents the enemy bullet.
     public GameObject enemyBullet;
@@ -53,23 +53,23 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         //Determines if the ship has hit the player weapon.
-        if (other.tag == "PlayerWeapon")
+        if (collision.CompareTag("PlayerWeapon"))
         {
             if (revengeBullet)
             {
                 Instantiate(enemyBullet, transform.position, transform.rotation);
             }
-            Destroy(other.gameObject);
+            Destroy(collision.gameObject);
             Destroy(gameObject);
         }
 
         //If the enemy has reached the playing field, have the enemy be active.
         if (!isActive)
         {
-            if (other.tag == "PlayingField")
+            if (collision.CompareTag("PlayingField"))
             {
                 isActive = true;
                 activeTime = Time.time;
@@ -85,7 +85,7 @@ public class EnemyBehavior : MonoBehaviour
             yVel = -1;
         }
 
-        Vector3 enemyMovement = transform.right * -speed;
+        Vector2 enemyMovement = transform.right * -speed;
 
         switch (pathSet)
         {
@@ -109,14 +109,13 @@ public class EnemyBehavior : MonoBehaviour
 
         }
 
-        enemyRigid.velocity = playingField.GetComponent<Rigidbody>().velocity + enemyMovement;
+        enemyRigid.velocity = playingField.GetComponent<Rigidbody2D>().velocity + enemyMovement;
     }
 
     private bool reachedXPosition()
     {
         if(reachedX || transform.position.x < (playingField.transform.position.x + xChange))
         {
-            Debug.Log("Reached X");
             reachedX = true;
             return true;
         }
@@ -131,7 +130,7 @@ public class EnemyBehavior : MonoBehaviour
         return Mathf.Cos((Time.time - activeTime) * 3) * 2 * yVel;
     }
 
-    private void moveZigZag(ref Vector3 enemyMovement, int yVel)
+    private void moveZigZag(ref Vector2 enemyMovement, int yVel)
     {
         if(reachedXPosition())
         {
@@ -150,7 +149,7 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
-    private void moveStopChase(ref Vector3 enemyMovement)
+    private void moveStopChase(ref Vector2 enemyMovement)
     {
         if (reachedXPosition())
         {
@@ -167,7 +166,7 @@ public class EnemyBehavior : MonoBehaviour
             case movementPath.UTurn:
                 if(shoot && reachedX)
                 {
-                    Instantiate(enemyBullet, transform.position, Quaternion.identity);
+                    Instantiate(enemyBullet, transform.position, transform.rotation);
                     shoot = false;
                 }
                 break;

@@ -22,6 +22,7 @@ public class Mover : MonoBehaviour
     // Start is called before the first frame update
     void FixedUpdate()
     {
-        weaponRigid.velocity = fieldVel.velocity + ((Vector2)transform.right * speed);
+        Vector2 weaponVelocity = transform.right * speed;
+        weaponRigid.velocity = fieldVel.velocity + weaponVelocity;
     }
 }

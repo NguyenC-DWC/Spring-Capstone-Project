@@ -5,19 +5,21 @@ using UnityEngine;
 public class EnemyWeapon : MonoBehaviour
 {
     //Represents the velocity of the playing field.
-    private Rigidbody fieldVel;
+    private Rigidbody2D fieldVel;
 
     //Speed of the object the speed of the playing field.
     public float speed;
 
     [SerializeField]
-    private Rigidbody weaponRigid;
+    private Rigidbody2D weaponRigid;
 
     void Start()
     {
         Transform player = GameObject.Find("PlayerShip").transform;
-        fieldVel = GameObject.Find("PlayingField").GetComponent<Rigidbody>();
+        fieldVel = GameObject.Find("PlayingField").GetComponent<Rigidbody2D>();
         transform.right = player.position - transform.position;
-        weaponRigid.velocity = fieldVel.velocity + (transform.right * speed);
+
+        Vector2 weaponVelocity = transform.right * speed;
+        weaponRigid.velocity = fieldVel.velocity + weaponVelocity;
     }
 }
