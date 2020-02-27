@@ -7,13 +7,18 @@ public class PlayerShip : MonoBehaviour
     //Represents the playing field.
     private GameObject playingField;
 
+    //Represents the audio source.
+    public AudioSource source;
+
     //Rigidbody of the ship.
     [SerializeField]
     private Rigidbody2D shipRB;
-    
+
     //Represents the weapon, and where the weapon should be shot from on the ship.
+    
     public Transform shotSpawn;
     public GameObject weapon;
+    public AudioClip weaponSound;
 
     //Firerate of the ship;
     float fireRate = .25f;
@@ -25,6 +30,7 @@ public class PlayerShip : MonoBehaviour
     void Start()
     {
         playingField = GameObject.Find("PlayingField");
+        source = GameObject.Find("SoundManager").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -60,6 +66,7 @@ public class PlayerShip : MonoBehaviour
         {
             nextFire = Time.time + fireRate;
             Instantiate(weapon,shotSpawn.position,shotSpawn.rotation);
+            source.PlayOneShot(weaponSound);
         }
     }
 
@@ -67,7 +74,7 @@ public class PlayerShip : MonoBehaviour
     {
         if (collision.CompareTag("Enemy") || collision.CompareTag("EnemyWeapon"))
         {
-            Destroy(collision.gameObject);
+            source.PlayOneShot(Resources.Load("SoundEffects/retro_die_02") as AudioClip);
             Debug.Log("Ouch!");
         }
     }

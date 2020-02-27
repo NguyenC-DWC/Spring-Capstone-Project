@@ -62,39 +62,42 @@ public class EnemyMove : MonoBehaviour
 
     public void move()
     {
-        int yVel = 1;
-        if (yFlipped)
+        if(isActive)
         {
-            yVel = -1;
+            int yVel = 1;
+            if (yFlipped)
+            {
+                yVel = -1;
+            }
+
+            Vector2 enemyMovement = transform.right * -speed;
+
+            switch (pathSet)
+            {
+                //Moves the enemy in a wave motion.
+                case movementPath.Wave:
+                    enemyMovement.y = Mathf.Cos((Time.time - activeTime) * 3) * 2 * yVel;
+                    break;
+
+                //Have the enemy move to the middle of the screen, then go backwards.
+                case movementPath.Zigzag:
+                    if (reachedXPosition())
+                    {
+                        enemyMovement.x = speed * 1.5f;
+                        enemyMovement.y = speed * .5f * yVel;
+                    }
+                    break;
+
+                case movementPath.StopChase:
+                    if (reachedXPosition())
+                    {
+                        enemyMovement.x = 0;
+                    }
+                    break;
+            }
+
+            enemyRigid.velocity = playingField.GetComponent<Rigidbody2D>().velocity + enemyMovement;
         }
-
-        Vector2 enemyMovement = transform.right * -speed;
-
-        switch (pathSet)
-        {
-            //Moves the enemy in a wave motion.
-            case movementPath.Wave:
-                enemyMovement.y = Mathf.Cos((Time.time - activeTime) * 3) * 2 * yVel;
-                break;
-
-            //Have the enemy move to the middle of the screen, then go backwards.
-            case movementPath.Zigzag:
-                if (reachedXPosition())
-                {
-                    enemyMovement.x = speed * 1.5f;
-                    enemyMovement.y = speed * .5f * yVel;
-                }
-                break;
-
-            case movementPath.StopChase:
-                if (reachedXPosition())
-                {
-                    enemyMovement.x = 0;
-                }
-                break;
-
-        }
-
-        enemyRigid.velocity = playingField.GetComponent<Rigidbody2D>().velocity + enemyMovement;
+       
     }
 }

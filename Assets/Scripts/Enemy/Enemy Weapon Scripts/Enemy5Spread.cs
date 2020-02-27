@@ -1,0 +1,16 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Enemy5Spread : EnemyWeapon
+{
+    public override void fireWeapon(Transform enemyTransform)
+    {
+        Debug.Log("Spread Fire");
+        Instantiate(enemyBullet, enemyTransform.position, Quaternion.identity);
+        Instantiate(enemyBullet, enemyTransform.position, Quaternion.Euler(0, 0, 10));
+        Instantiate(enemyBullet, enemyTransform.position, Quaternion.Euler(0, 0, 20));
+        Instantiate(enemyBullet, enemyTransform.position, Quaternion.Euler(0, 0, -10));
+        Instantiate(enemyBullet, enemyTransform.position, Quaternion.Euler(0, 0, -20));
+    }
+}
