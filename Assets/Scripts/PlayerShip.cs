@@ -8,21 +8,20 @@ public class PlayerShip : MonoBehaviour
     private GameObject playingField;
 
     //Represents the audio source.
-    public AudioSource source;
+    private AudioSource source;
 
     //Rigidbody of the ship.
     [SerializeField]
     private Rigidbody2D shipRB;
 
-    //Represents the weapon, and where the weapon should be shot from on the ship.
-    
-    public Transform shotSpawn;
-    public GameObject weapon;
-    public AudioClip weaponSound;
+    //The current health of the ship.
+    public int shipHealth = 7;
 
-    //Firerate of the ship;
-    float fireRate = .25f;
-    float nextFire = 0f;
+    //Represents the weapons of the ship, and the current active weapon.
+    public PlayerWeapon activeWeapon;
+
+    private PlayerWeapon mainWeapon;
+    private PlayerWeapon secondaryWeapon;
 
     //Speed of the ship.
     private float speed = 3f;
@@ -31,6 +30,9 @@ public class PlayerShip : MonoBehaviour
     {
         playingField = GameObject.Find("PlayingField");
         source = GameObject.Find("SoundManager").GetComponent<AudioSource>();
+        mainWeapon = transform.GetChild(1).transform.GetChild(0).GetComponent<PlayerWeapon>();
+        secondaryWeapon = transform.GetChild(2).transform.GetChild(0).GetComponent<PlayerWeapon>();
+        activeWeapon = mainWeapon;
     }
 
     // Update is called once per frame
@@ -62,12 +64,30 @@ public class PlayerShip : MonoBehaviour
 
     void shoot()
     {
-        if (Input.GetKey(KeyCode.Space) && Time.time > nextFire)
+        if (Input.GetKey(KeyCode.Space))
         {
-            nextFire = Time.time + fireRate;
-            Instantiate(weapon,shotSpawn.position,shotSpawn.rotation);
-            source.PlayOneShot(weaponSound);
+            activeWeapon.fireWeapon();
         }
+        else if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            StartCoroutine(swapWeapons());
+        }
+    }
+
+    public IEnumerator swapWeapons()
+    {
+        Debug.Log("Weapons Swapped!");
+        if (activeWeapon == mainWeapon)
+        {
+            Debug.Log("Secondary!");
+            activeWeapon = secondaryWeapon;
+        }
+        else
+        {
+            Debug.Log("Main!");
+            activeWeapon = mainWeapon;
+        }
+        yield return new WaitForSeconds(.5f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -75,7 +95,13 @@ public class PlayerShip : MonoBehaviour
         if (collision.CompareTag("Enemy") || collision.CompareTag("EnemyWeapon"))
         {
             source.PlayOneShot(Resources.Load("SoundEffects/retro_die_02") as AudioClip);
+            shipHealth--;
             Debug.Log("Ouch!");
+            if(shipHealth == 0)
+            {
+                Instantiate(Resources.Load("Animations/Explosion"),transform.position,transform.rotation);
+                Destroy(gameObject);
+            }
         }
     }
 }
