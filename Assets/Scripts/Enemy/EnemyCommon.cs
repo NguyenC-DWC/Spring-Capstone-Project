@@ -10,9 +10,24 @@ public class EnemyCommon : MonoBehaviour
     public GameObject deathEffect;
     public AudioClip deathSound;
 
+    public int scoreValue = 10;
+
+    public GameObject formation;
+    public bool inFormation;
+
     private void Start()
     {
         source = GameObject.Find("SoundManager").GetComponent<AudioSource>();
+        if(transform.parent.gameObject.CompareTag("Formation"))
+        {
+            formation = transform.parent.gameObject;
+            inFormation = true;
+        }
+        else
+        {
+            formation = null;
+            inFormation = false;
+        }
     }
 
     void FixedUpdate()
@@ -29,6 +44,12 @@ public class EnemyCommon : MonoBehaviour
             if(collision.CompareTag("PlayerWeapon"))
             {
                 Destroy(collision.gameObject);
+                GameObject.Find("GameManager").GetComponent<GameManager>().addScore(scoreValue);
+                if (inFormation)
+                {
+                    formation.GetComponent<EnemyFormation>().decreaseShips();
+                }
+
             }
 
             Instantiate(deathEffect, transform.position, transform.rotation);

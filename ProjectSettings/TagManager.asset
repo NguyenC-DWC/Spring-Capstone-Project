@@ -8,6 +8,8 @@ TagManager:
   - EnemyWeapon
   - Enemy
   - PlayingField
+  - Powerup
+  - Formation
   layers:
   - Default
   - TransparentFX

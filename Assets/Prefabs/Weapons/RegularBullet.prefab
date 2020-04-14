@@ -43,6 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35b8b9215ed214d489946ebd84da0a75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponName: Bullet
+  weaponImage: {fileID: 21300000, guid: 8941c6232b10c4f46a2310342e42ca21, type: 3}
   weaponAmmo: {fileID: 1436940658970186575, guid: b524ae0e26953b549bfbd3ec748a55c4,
     type: 3}
   weaponSound: {fileID: 8300000, guid: 143f78f7fa0bd024dbb80adc830acfba, type: 3}

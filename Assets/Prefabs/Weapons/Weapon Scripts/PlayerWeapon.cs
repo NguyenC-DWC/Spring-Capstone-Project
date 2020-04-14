@@ -4,6 +4,12 @@ using UnityEngine;
 
 public abstract class PlayerWeapon : MonoBehaviour
 {
+    //The name of the weapon.
+    public string weaponName;
+
+    //The image shown on the display,
+    public Sprite weaponImage;
+
     //What the weapon will shoot.
     public GameObject weaponAmmo;
 
@@ -26,7 +32,6 @@ public abstract class PlayerWeapon : MonoBehaviour
 
     private void Start()
     {
-        shotSpawn = GameObject.Find("WeaponFire").GetComponent<Transform>();
         source = GameObject.Find("SoundManager").GetComponent<AudioSource>();
     }
 
@@ -34,15 +39,11 @@ public abstract class PlayerWeapon : MonoBehaviour
     {
         if(weaponLevel < 3)
         {
-            if(levelCharge < 3)
+            levelCharge++;
+            if(levelCharge % 3 == 0)
             {
-                levelCharge++;
-            }
-
-            if(levelCharge == 3)
-            {
-                levelCharge = 0;
                 weaponLevel++;
+                source.PlayOneShot(Resources.Load("SoundEffects/SFX_Powerup_01") as AudioClip);
             }
         }
     }
@@ -51,8 +52,20 @@ public abstract class PlayerWeapon : MonoBehaviour
     {
         if (weaponLevel > 1)
         {
-            levelCharge = 0;
+            source.PlayOneShot(Resources.Load("SoundEffects/Ouch__008") as AudioClip);
             weaponLevel--;
+            if (weaponLevel == 2)
+            {
+                levelCharge = 3;
+            }
+            else
+            {
+                levelCharge = 0;
+            }
+        }
+        else
+        {
+            levelCharge = 0;
         }
     }
 
@@ -63,6 +76,11 @@ public abstract class PlayerWeapon : MonoBehaviour
 
     public void fireWeapon()
     {
+        if(shotSpawn == null)
+        {
+            shotSpawn = GameObject.Find("WeaponFire").GetComponent<Transform>();
+        }
+
         if (Time.time > nextFire)
         {
             nextFire = Time.time + fireRate;

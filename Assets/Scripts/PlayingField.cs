@@ -9,20 +9,10 @@ public class PlayingField : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("PlayerWeapon") || collision.CompareTag("EnemyWeapon") || collision.CompareTag("Enemy"))
+        if (collision.CompareTag("PlayerWeapon") || collision.CompareTag("EnemyWeapon") || collision.CompareTag("Enemy") || collision.CompareTag("Powerup"))
         {
             Destroy(collision.gameObject);
         }
-    }
-
-    private void Start()
-    {
-        GetComponent<Rigidbody2D>().velocity = transform.right * speed;
-    }
-
-    public void startSlow()
-    {
-        StartCoroutine(slowToStop());
     }
 
     public IEnumerator slowToStop()
@@ -34,5 +24,18 @@ public class PlayingField : MonoBehaviour
             yield return null;
         }
         speed = 0;
+        GetComponent<Rigidbody2D>().velocity = transform.right * speed;
+    }
+
+    public IEnumerator speedUp(int targetSpeed)
+    {
+        while (speed < targetSpeed)
+        {
+            speed += .01f;
+            GetComponent<Rigidbody2D>().velocity = transform.right * speed;
+            yield return null;
+        }
+        speed = targetSpeed;
+        GetComponent<Rigidbody2D>().velocity = transform.right * speed;
     }
 }

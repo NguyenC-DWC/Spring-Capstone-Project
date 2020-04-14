@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerShip : MonoBehaviour
 {
+    private GameManager manager;
+
     //Represents the playing field.
     private GameObject playingField;
 
@@ -23,24 +25,37 @@ public class PlayerShip : MonoBehaviour
     private PlayerWeapon mainWeapon;
     private PlayerWeapon secondaryWeapon;
 
+    public bool isActive;
+
     //Speed of the ship.
-    private float speed = 3f;
+    public int speed = 3;
 
     void Start()
     {
+        manager = GameObject.Find("GameManager").GetComponent<GameManager>();
         playingField = GameObject.Find("PlayingField");
         source = GameObject.Find("SoundManager").GetComponent<AudioSource>();
-        mainWeapon = transform.GetChild(1).transform.GetChild(0).GetComponent<PlayerWeapon>();
-        secondaryWeapon = transform.GetChild(2).transform.GetChild(0).GetComponent<PlayerWeapon>();
+
+        shipHealth = manager.currentHealth;
+        speed = manager.currentSpeed;
+
+        mainWeapon = GameObject.Find("CurrentMain").transform.GetChild(0).GetComponent<PlayerWeapon>();
+        secondaryWeapon = GameObject.Find("CurrentSecondary").transform.GetChild(0).GetComponent<PlayerWeapon>();
+
         activeWeapon = mainWeapon;
+
+        updateDisplays();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         //Ship Movement
-        moveShip();
-        shoot();
+        if (isActive)
+        {
+            moveShip();
+            shoot();
+        }
     }
 
     void moveShip()
@@ -76,17 +91,20 @@ public class PlayerShip : MonoBehaviour
 
     public IEnumerator swapWeapons()
     {
-        Debug.Log("Weapons Swapped!");
+        StartCoroutine(GameObject.Find("DisplayMain").GetComponent<WeaponDisplay>().toggleDisplay());
+        StartCoroutine(GameObject.Find("DisplaySecondary").GetComponent<WeaponDisplay>().toggleDisplay());
+
+        source.PlayOneShot(Resources.Load("SoundEffects/synth_beep_02") as AudioClip);
+
         if (activeWeapon == mainWeapon)
         {
-            Debug.Log("Secondary!");
             activeWeapon = secondaryWeapon;
         }
         else
         {
-            Debug.Log("Main!");
             activeWeapon = mainWeapon;
         }
+
         yield return new WaitForSeconds(.5f);
     }
 
@@ -94,14 +112,48 @@ public class PlayerShip : MonoBehaviour
     {
         if (collision.CompareTag("Enemy") || collision.CompareTag("EnemyWeapon"))
         {
-            source.PlayOneShot(Resources.Load("SoundEffects/retro_die_02") as AudioClip);
+            
             shipHealth--;
-            Debug.Log("Ouch!");
-            if(shipHealth == 0)
+            manager.currentHealth = shipHealth;
+
+            if (speed > 3)
+            {
+                manager.currentSpeed--;
+                speed--;
+            }
+
+            activeWeapon.decreaseLevel();
+            updateDisplays();
+
+            if (shipHealth == 0)
             {
                 Instantiate(Resources.Load("Animations/Explosion"),transform.position,transform.rotation);
                 Destroy(gameObject);
             }
+            else
+            {
+                source.PlayOneShot(Resources.Load("SoundEffects/retro_die_02") as AudioClip,.5f);
+                Debug.Log("Ouch!");
+            }
         }
+    }
+
+    public void updateDisplays()
+    {
+        GameObject.Find("PlayerHealth").GetComponent<PlayerHealth>().updateHealth(shipHealth);
+        GameObject.Find("PlayerSpeed").GetComponent<PlayerSpeed>().updateSpeed(speed);
+        if (activeWeapon == mainWeapon)
+        {
+            GameObject.Find("DisplayMain").GetComponent<WeaponDisplay>().updateLevel(ref activeWeapon);
+        }
+        else
+        {
+            GameObject.Find("DisplaySecondary").GetComponent<WeaponDisplay>().updateLevel(ref activeWeapon);
+        }
+    }
+
+    public void setActive(bool active)
+    {
+        isActive = active;
     }
 }

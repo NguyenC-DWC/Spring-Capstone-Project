@@ -4,19 +4,25 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
+    [SerializeField]
     private AudioSource musicPlayer;
+
+    public bool loop;
 
     private void Start()
     {
-        musicPlayer = GetComponent<AudioSource>();
-    }
+;   }
 
-    public void startFade(AudioClip loadMusic)
+    public void playSetLoop(AudioClip loadMusic, bool loop)
     {
-        StartCoroutine(fadeToMusic(loadMusic));
+        musicPlayer.Stop();
+        musicPlayer.loop = loop;
+        musicPlayer.clip = loadMusic;
+        musicPlayer.Play();
+
     }
 
-    public IEnumerator fadeToMusic(AudioClip loadMusic)
+    public IEnumerator fadeToMusic(AudioClip loadMusic, bool loop)
     {
         while(musicPlayer.volume > 0)
         {
@@ -28,6 +34,8 @@ public class MusicManager : MonoBehaviour
         musicPlayer.Stop();
 
         yield return new WaitForSeconds(1);
+
+        musicPlayer.loop = loop;
 
         musicPlayer.clip = loadMusic;
         musicPlayer.volume = .25f;
