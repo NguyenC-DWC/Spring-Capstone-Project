@@ -9,6 +9,7 @@ public class MapManager : MonoBehaviour
     // Start is called before the first frame update
     int selectedSet;
     int selectedLevel;
+    int selectedBranch;
 
     string sceneName;
 
@@ -19,12 +20,20 @@ public class MapManager : MonoBehaviour
 
         GameManager manager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
+        GameObject planetLocations = GameObject.Find("PlanetLocations");
+
+        for (int i = 1; i < planetLocations.transform.childCount; i++)
+        {
+            GameObject setPlanet = Instantiate(manager.planetSeed[i-1]);
+            setPlanet.transform.SetParent(planetLocations.transform.GetChild(i), false) ;
+        }
+        
         for(int i = 0; i < manager.pathTaken.Count; i++)
         {
             for (int j = 0; j < GameObject.Find("Paths").transform.childCount; j++)
             {
                 Path possiblePath = GameObject.Find("Paths").transform.GetChild(j).GetComponent<Path>();
-                if (possiblePath.pathSet == manager.pathTaken[i].x && possiblePath.pathLevel == manager.pathTaken[i].y)
+                if (possiblePath.pathSet == manager.pathTaken[i].x && possiblePath.pathLevel == manager.pathTaken[i].y && possiblePath.previousBranch == manager.pathTaken[i].z)
                 {
                     possiblePath.gameObject.GetComponent<RawImage>().enabled = true;
                     possiblePath.gameObject.GetComponent<RawImage>().color = Color.green;
@@ -33,11 +42,12 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public void setScene(string sceneName, int set, int level)
+    public void setScene(string sceneName, int set, int level, int branch)
     {
         this.sceneName = sceneName;
         selectedSet = set;
         selectedLevel = level;
+        selectedBranch = branch;
     }
 
     public void goToScene()
@@ -54,7 +64,7 @@ public class MapManager : MonoBehaviour
         manager.currentSet = selectedSet;
         manager.currentLevel = selectedLevel;
 
-        manager.pathTaken.Add(new Vector2(selectedSet, selectedLevel));
+        manager.pathTaken.Add(new Vector3(selectedSet, selectedLevel, selectedBranch));
 
         GameObject.Find("MusicManager").GetComponent<AudioSource>().Stop();
         GameObject.Find("SoundManager").GetComponent<AudioSource>().PlayOneShot(Resources.Load("SoundEffects/03 Coin") as AudioClip);

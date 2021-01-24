@@ -11,6 +11,8 @@ public class EnemyFormation : MonoBehaviour
 
     public int scoreValue = 0;
 
+    public bool dropsItem = false;
+
     private void Start()
     {
         shipsInFormation = transform.childCount;
@@ -22,10 +24,13 @@ public class EnemyFormation : MonoBehaviour
         if(transform.childCount == 0)
         {
             //Ensures that the powerup only deploys if the player hits all of the ships.
-            if(shipsInFormation == 0)
+            if(shipsInFormation <= 0)
             {
                 Debug.Log("All ships hit.");
-                Instantiate(powerUp, lastShipPos, Quaternion.identity);
+                if(dropsItem)
+                {
+                    Instantiate(powerUp, lastShipPos, Quaternion.identity);
+                }
                 GameObject.Find("GameManager").GetComponent<GameManager>().addScore(scoreValue);
             }
             else

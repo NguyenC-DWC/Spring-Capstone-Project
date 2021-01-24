@@ -15,6 +15,14 @@ public class PlayingField : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("StageSlow"))
+        {
+            GameObject.Find("LevelManager").GetComponent<LevelManager>().startSlow();
+        }
+    }
+
     public IEnumerator slowToStop()
     {
         while (speed > 0)

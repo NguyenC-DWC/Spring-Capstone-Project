@@ -10,6 +10,7 @@ TagManager:
   - PlayingField
   - Powerup
   - Formation
+  - StageSlow
   layers:
   - Default
   - TransparentFX

@@ -7,4 +7,5 @@ public class Path : MonoBehaviour
 {
     public int pathSet;
     public int pathLevel;
+    public int previousBranch;
 }

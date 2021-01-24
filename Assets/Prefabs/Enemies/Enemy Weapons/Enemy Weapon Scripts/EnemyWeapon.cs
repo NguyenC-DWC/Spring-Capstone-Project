@@ -9,7 +9,6 @@ public class EnemyWeapon : MonoBehaviour
 
     public virtual void fireWeapon(Transform enemyTransform)
     {
-        Debug.Log("Regular Fire");
         Instantiate(enemyBullet, enemyTransform.position, Quaternion.identity);
     }
 }

@@ -7,7 +7,7 @@ public class Collectable : MonoBehaviour
     //Represents the audio source.
     private AudioSource source;
 
-    public enum collectableType {weaponPower,speed};
+    public enum collectableType {weaponPower,weaponUp,speed};
     public collectableType collectType;
 
     //Represents the velocity of the playing field.
@@ -58,6 +58,12 @@ public class Collectable : MonoBehaviour
                         collision.GetComponent<PlayerShip>().speed++;
                     }
                     break;
+                case collectableType.weaponUp:
+                    collision.GetComponent<PlayerShip>().activeWeapon.increaseLevel();
+                    collision.GetComponent<PlayerShip>().activeWeapon.increaseLevel();
+                    collision.GetComponent<PlayerShip>().activeWeapon.increaseLevel();
+                    break;
+
             }
             collision.GetComponent<PlayerShip>().updateDisplays();
         }

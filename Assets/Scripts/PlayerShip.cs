@@ -155,5 +155,10 @@ public class PlayerShip : MonoBehaviour
     public void setActive(bool active)
     {
         isActive = active;
+
+        if (!active && activeWeapon == secondaryWeapon)
+        {
+            StartCoroutine(swapWeapons());
+        }
     }
 }

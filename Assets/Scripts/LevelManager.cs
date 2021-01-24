@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -58,8 +60,42 @@ public class LevelManager : MonoBehaviour
         for(int i = 0; i < 4; i++)
         {
             GameObject.Find("SoundManager").GetComponent<AudioSource>().PlayOneShot(Resources.Load("SoundEffects/ambient_alarm1") as AudioClip,.5f);
-            yield return new WaitForSeconds(.75f);
+
+
+            float alarmTrans = 0;
+            bool adding = true;
+            RawImage alarm = GameObject.Find("Alarm").GetComponent<RawImage>();
+
+            do
+            {
+
+                if (adding)
+                {
+                    alarmTrans += .05f;
+                    if (alarmTrans >= 1)
+                    {
+                        adding = false;
+                        alarmTrans = 1;
+                    }
+                }
+                else
+                {
+                    alarmTrans -= .05f;
+                    if(alarmTrans <= 0)
+                    {
+                        alarmTrans = 0;
+                    }
+                }
+
+                alarm.color = new Color(55,0,0,alarmTrans);
+                yield return new WaitForSeconds(.0125f);
+
+            } while (alarmTrans != 0);
+
+            yield return new WaitForSeconds(.5f);
         }
+
+        StartCoroutine(GameObject.Find("Boss").GetComponent<BossCommon>().bossEntrance());
     }
 
     public void endLevel()
@@ -70,6 +106,8 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(moveShipOut(ship));
         StartCoroutine(GameObject.Find("MusicManager").GetComponent<MusicManager>().fadeToMusic(Resources.Load("Music/Space Megaforce - Area Clear") as AudioClip, false));
         StartCoroutine(sceneOut());
+
+        StartCoroutine(textMove());
     }
 
     private IEnumerator sceneOut()
@@ -114,5 +152,33 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForSeconds(5);
         shipMove = true;
         Debug.Log("Begin move out.");
+    }
+
+    private IEnumerator textMove()
+    {
+        Transform topText = GameObject.Find("Clear").GetComponent<Transform>();
+        Transform bottomText = GameObject.Find("NextStage").GetComponent<Transform>();
+        Transform endPosition1 = GameObject.Find("ClearPos").GetComponent<Transform>();
+        Transform endPosition2 = GameObject.Find("NextPos").GetComponent<Transform>();
+
+        yield return new WaitForSeconds(8f);
+
+        float startTime = Time.time;
+        while (Time.time < startTime + 1f)
+        {
+            topText.position = Vector3.Lerp(topText.position, endPosition1.position, (Time.time - startTime) / 1f);
+            yield return null;
+        }
+
+        topText.position = endPosition1.position;
+
+        startTime = Time.time;
+        while (Time.time < startTime + 1f)
+        {
+            bottomText.position = Vector3.Lerp(bottomText.position, endPosition2.position, (Time.time - startTime) / 1f);
+            yield return null;
+        }
+
+        bottomText.position = endPosition2.position;
     }
 }

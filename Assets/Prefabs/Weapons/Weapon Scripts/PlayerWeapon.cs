@@ -54,12 +54,14 @@ public abstract class PlayerWeapon : MonoBehaviour
         {
             source.PlayOneShot(Resources.Load("SoundEffects/Ouch__008") as AudioClip);
             weaponLevel--;
-            if (weaponLevel == 2)
+            if (weaponLevel == 2 || levelCharge > 3)
             {
+                Debug.Log("3 To 2");
                 levelCharge = 3;
             }
             else
             {
+                Debug.Log("2 To 1");
                 levelCharge = 0;
             }
         }

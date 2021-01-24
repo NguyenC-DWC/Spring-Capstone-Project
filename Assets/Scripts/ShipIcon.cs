@@ -11,11 +11,11 @@ public class ShipIcon : MonoBehaviour
     {
         rect = GetComponent<RectTransform>();
         GameManager manager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        GameObject planets = GameObject.Find("Planets");
+        GameObject planetLocations = GameObject.Find("PlanetLocations");
 
-        for (int i = 0; i < planets.transform.childCount; i++)
+        for (int i = 0; i < planetLocations.transform.childCount; i++)
         {
-            PlanetLevel currentPlanet = planets.transform.GetChild(i).GetComponent<PlanetLevel>();
+            PlanetLocation currentPlanet = planetLocations.transform.GetChild(i).GetComponent<PlanetLocation>();
             if(currentPlanet.setNumber == manager.currentSet && currentPlanet.levelNumber == manager.currentLevel)
             {
                 rect.anchoredPosition = currentPlanet.gameObject.GetComponent<RectTransform>().anchoredPosition + new Vector2(0, 20);

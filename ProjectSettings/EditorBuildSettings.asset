@@ -7,11 +7,23 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/MapScene.unity
-    guid: d5c99b0d650aab64faa0183b69a59237
+    guid: a79f33b199c789e429c43012aed18c5f
   - enabled: 1
-    path: Assets/Scenes/Rock.unity
-    guid: 829ac51d299902d4498b0b5bf54df5b5
+    path: Assets/Scenes/Levels/Fire.unity
+    guid: 1e5c8f31b0d668f46a52f6973d588d1f
   - enabled: 1
-    path: Assets/Scenes/Water.unity
-    guid: 6eb9e0c2d64104442be1a5cef537ae83
+    path: Assets/Scenes/Levels/Ice.unity
+    guid: befa390e6b493ca41a800cb31758a5a8
+  - enabled: 1
+    path: Assets/Scenes/Levels/Rock.unity
+    guid: 3162b95ac91408a45bc9772681a4afc1
+  - enabled: 1
+    path: Assets/Scenes/Levels/Sand.unity
+    guid: bdf579a10914ae147a97698fc86b03a0
+  - enabled: 1
+    path: Assets/Scenes/Levels/Start(Template).unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Levels/Water.unity
+    guid: d48b9ea1c1deb8349996be116bbe40a1
   m_configObjects: {}
