@@ -6,6 +6,8 @@ public class PlayerShip : MonoBehaviour
 {
     private GameManager manager;
 
+    //Debug Objects.
+
     //Represents the playing field.
     private GameObject playingField;
 
@@ -26,6 +28,8 @@ public class PlayerShip : MonoBehaviour
     private PlayerWeapon secondaryWeapon;
 
     public bool isActive;
+
+    public bool isSwitching = false;
 
     //Speed of the ship.
     public int speed = 3;
@@ -55,6 +59,7 @@ public class PlayerShip : MonoBehaviour
         {
             moveShip();
             shoot();
+            debug();
         }
     }
 
@@ -83,14 +88,41 @@ public class PlayerShip : MonoBehaviour
         {
             activeWeapon.fireWeapon();
         }
-        else if (Input.GetKeyDown(KeyCode.LeftShift))
+        else if (Input.GetKeyDown(KeyCode.LeftShift) && !isSwitching)
         {
             StartCoroutine(swapWeapons());
         }
     }
 
+    void debug()
+    {
+        if (Input.GetKeyUp(KeyCode.I))
+        {
+            if(speed < 6)
+            {
+                GameObject.Find("GameManager").GetComponent<GameManager>().currentSpeed++;
+                speed++;
+            }
+            updateDisplays();
+        }
+        else if (Input.GetKeyUp(KeyCode.O))
+        {
+            activeWeapon.increaseLevel();
+            updateDisplays();
+        }
+        else if (Input.GetKeyUp(KeyCode.P))
+        {
+            activeWeapon.increaseLevel();
+            activeWeapon.increaseLevel();
+            activeWeapon.increaseLevel();
+            updateDisplays();
+        }
+    }
+
     public IEnumerator swapWeapons()
     {
+        isSwitching = true;
+
         StartCoroutine(GameObject.Find("DisplayMain").GetComponent<WeaponDisplay>().toggleDisplay());
         StartCoroutine(GameObject.Find("DisplaySecondary").GetComponent<WeaponDisplay>().toggleDisplay());
 
@@ -105,7 +137,8 @@ public class PlayerShip : MonoBehaviour
             activeWeapon = mainWeapon;
         }
 
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.75f);
+        isSwitching = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: 7112a628ce68e3948b08912ccddf3434
+  - enabled: 1
+    path: Assets/Scenes/Levels/Start(Template).unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
     path: Assets/Scenes/MapScene.unity
     guid: a79f33b199c789e429c43012aed18c5f
   - enabled: 1
@@ -20,9 +26,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Levels/Sand.unity
     guid: bdf579a10914ae147a97698fc86b03a0
-  - enabled: 1
-    path: Assets/Scenes/Levels/Start(Template).unity
-    guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/Levels/Water.unity
     guid: d48b9ea1c1deb8349996be116bbe40a1

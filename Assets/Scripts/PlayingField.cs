@@ -9,7 +9,11 @@ public class PlayingField : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("PlayerWeapon") || collision.CompareTag("EnemyWeapon") || collision.CompareTag("Enemy") || collision.CompareTag("Powerup"))
+        if(collision.CompareTag("PlayerWeapon") || collision.CompareTag("EnemyWeapon"))
+        {
+            Destroy(collision.transform.root.gameObject);
+        }
+        else if(collision.CompareTag("Enemy") || collision.CompareTag("Powerup"))
         {
             Destroy(collision.gameObject);
         }
