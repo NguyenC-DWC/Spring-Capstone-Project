@@ -55,7 +55,7 @@ public class PlanetLocation : MonoBehaviour, IPointerEnterHandler, IPointerClick
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (levelSelect.position == transform.position)
+        if (Vector3.Distance(levelSelect.position, transform.position) < .1)
         {
             GameObject.Find("SoundManager").GetComponent<AudioSource>().PlayOneShot(Resources.Load("SoundEffects/retro_beep_02") as AudioClip, .5f);
             GameObject.Find("PlanetConfirm").GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition;

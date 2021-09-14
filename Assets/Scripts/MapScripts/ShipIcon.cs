@@ -28,6 +28,5 @@ public class ShipIcon : MonoBehaviour
     {
         Vector2 position = new Vector2(rect.anchoredPosition.x, rect.anchoredPosition.y + Mathf.Cos(Time.time) * .15f);
         rect.anchoredPosition = position;
-        Debug.Log(Mathf.Cos(Time.time) * .15f);
     }
 }
